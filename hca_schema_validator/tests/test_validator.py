@@ -5,6 +5,10 @@ from pathlib import Path
 import pytest
 from hca_schema_validator import HCAValidator
 
+# Repository root (2 levels up from this file)
+REPO_ROOT = Path(__file__).parent.parent.parent
+FIXTURES_DIR = REPO_ROOT / "cellxgene_schema_cli/tests/fixtures/h5ads"
+
 
 def test_import():
     """Test that HCAValidator can be imported."""
@@ -41,9 +45,7 @@ def test_has_validation_methods():
 
 def test_validate_valid_h5ad():
     """Test validation of a valid h5ad file."""
-    # Path to test fixture (relative to repo root)
-    test_file = Path(__file__).parent.parent.parent / \
-                "cellxgene_schema_cli/tests/fixtures/h5ads/example_valid.h5ad"
+    test_file = FIXTURES_DIR / "example_valid.h5ad"
     
     if not test_file.exists():
         pytest.skip(f"Test fixture not found: {test_file}")
@@ -60,9 +62,7 @@ def test_validate_valid_h5ad():
 
 def test_validate_invalid_h5ad():
     """Test validation of an invalid h5ad file."""
-    # Path to test fixture (relative to repo root)
-    test_file = Path(__file__).parent.parent.parent / \
-                "cellxgene_schema_cli/tests/fixtures/h5ads/example_invalid_CL.h5ad"
+    test_file = FIXTURES_DIR / "example_invalid_CL.h5ad"
     
     if not test_file.exists():
         pytest.skip(f"Test fixture not found: {test_file}")
