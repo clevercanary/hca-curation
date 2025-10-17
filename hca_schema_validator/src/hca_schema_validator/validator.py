@@ -6,6 +6,10 @@ import yaml
 from cellxgene_schema.validate import Validator
 from . import __schema_version__ as HCA_SCHEMA_VERSION
 
+# Schema file constants
+SCHEMA_DIR = "schema_definitions"
+SCHEMA_FILENAME = "hca_schema_definition.yaml"
+
 
 class HCAValidator(Validator):
     """
@@ -37,7 +41,7 @@ class HCAValidator(Validator):
         
         if not self.schema_def:
             # Load HCA-specific schema
-            schema_path = Path(__file__).parent / "schema_definitions" / "hca_schema_definition.yaml"
+            schema_path = Path(__file__).parent / SCHEMA_DIR / SCHEMA_FILENAME
             
             with open(schema_path) as fp:
                 self.schema_def = yaml.load(fp, Loader=yaml.FullLoader)
