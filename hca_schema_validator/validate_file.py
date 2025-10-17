@@ -6,7 +6,7 @@ Usage:
     poetry run python validate_file.py <path/to/file.h5ad>
     poetry run python validate_file.py <path/to/file.h5ad> --with-labels
 """
-import sys
+import argparse
 from hca_schema_validator import HCAValidator
 
 # Display constants
@@ -14,15 +14,28 @@ SEPARATOR_WIDTH = 70
 
 def main():
     # Parse command-line arguments
-    if len(sys.argv) < 2:
-        print("Error: Please provide a file path")
-        print("\nUsage:")
-        print("  poetry run python validate_file.py <path/to/file.h5ad>")
-        print("  poetry run python validate_file.py <path/to/file.h5ad> --with-labels")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Validate h5ad files with HCA schema",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  poetry run python validate_file.py data.h5ad
+  poetry run python validate_file.py data.h5ad --with-labels
+        """
+    )
+    parser.add_argument(
+        "file",
+        help="Path to the h5ad file to validate"
+    )
+    parser.add_argument(
+        "--with-labels",
+        action="store_true",
+        help="Include label validation (gene ID checks, etc.). Default: skip labels"
+    )
     
-    h5ad_file = sys.argv[1]
-    ignore_labels = "--with-labels" not in sys.argv
+    args = parser.parse_args()
+    h5ad_file = args.file
+    ignore_labels = not args.with_labels
     
     print(f"\n{'=' * SEPARATOR_WIDTH}")
     print(f"HCA Schema Validator")

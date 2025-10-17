@@ -44,4 +44,4 @@ class HCAValidator(Validator):
             schema_path = Path(__file__).parent / SCHEMA_DIR / SCHEMA_FILENAME
             
             with open(schema_path) as fp:
-                self.schema_def = yaml.load(fp, Loader=yaml.FullLoader)
+                self.schema_def = yaml.safe_load(fp)
