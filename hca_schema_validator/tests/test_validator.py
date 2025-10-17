@@ -1,6 +1,5 @@
 """Tests for HCA Validator."""
 
-import os
 import tempfile
 from pathlib import Path
 
@@ -93,14 +92,13 @@ def test_organism_in_obs():
     """
     from .fixtures.hca_fixtures import adata
     
-    # Create a temporary h5ad file using mkstemp for better resource management
-    fd, tmp_path = tempfile.mkstemp(suffix=".h5ad")
-    try:
-        os.close(fd)  # Close the file descriptor immediately
-        adata.write_h5ad(tmp_path)
+    # Use TemporaryDirectory for automatic cleanup
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp_path = Path(tmpdir) / "test.h5ad"
+        adata.write_h5ad(str(tmp_path))
         
         validator = HCAValidator()
-        is_valid = validator.validate_adata(tmp_path)
+        is_valid = validator.validate_adata(str(tmp_path))
         
         # HCA requirement: Should accept organism_ontology_term_id in obs
         assert is_valid is True, f"Validation failed with errors: {validator.errors}"
@@ -109,6 +107,3 @@ def test_organism_in_obs():
         for error in validator.errors:
             assert not ("organism" in error.lower() and "deprecated" in error.lower()), \
                 "organism_ontology_term_id should not be deprecated in obs for HCA schema"
-    finally:
-        # Cleanup - always executed even if test fails
-        Path(tmp_path).unlink(missing_ok=True)
