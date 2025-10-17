@@ -1,6 +1,6 @@
 """HCA Validator - extends cellxgene Validator with HCA-specific rules."""
 
-import os
+from pathlib import Path
 import yaml
 
 from cellxgene_schema.validate import Validator
@@ -37,12 +37,7 @@ class HCAValidator(Validator):
         
         if not self.schema_def:
             # Load HCA-specific schema
-            package_root = os.path.dirname(os.path.realpath(__file__))
-            schema_path = os.path.join(
-                package_root, 
-                "schema_definitions", 
-                "hca_schema_definition.yaml"
-            )
+            schema_path = Path(__file__).parent / "schema_definitions" / "hca_schema_definition.yaml"
             
             with open(schema_path) as fp:
                 self.schema_def = yaml.load(fp, Loader=yaml.FullLoader)

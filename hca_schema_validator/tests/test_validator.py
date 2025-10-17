@@ -90,7 +90,7 @@ def test_organism_in_obs():
     This is the HCA requirement - organism fields should be in obs, not uns
     (reverting the CELLxGENE v6 change that moved them to uns).
     """
-    from tests.fixtures.hca_fixtures import adata
+    from .fixtures.hca_fixtures import adata
     
     # Create a temporary h5ad file
     with tempfile.NamedTemporaryFile(suffix=".h5ad", delete=False) as tmp:
@@ -104,9 +104,9 @@ def test_organism_in_obs():
         # HCA requirement: Should accept organism_ontology_term_id in obs
         assert is_valid is True, f"Validation failed with errors: {validator.errors}"
         
-        # Should not have errors about organism being in obs
+        # Should not have errors about organism being deprecated in obs
         for error in validator.errors:
-            assert "organism" not in error.lower() or "deprecated" not in error.lower(), \
+            assert not ("organism" in error.lower() and "deprecated" in error.lower()), \
                 "organism_ontology_term_id should not be deprecated in obs for HCA schema"
     finally:
         # Cleanup
